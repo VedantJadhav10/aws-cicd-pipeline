@@ -16,7 +16,7 @@ resource "aws_iam_role" "tf-codepipeline-role" {
   ]
 }
 EOF
-
+ 
 }
 
 data "aws_iam_policy_document" "tf-cicd-pipeline-policies" {

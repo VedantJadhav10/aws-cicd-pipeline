@@ -30,7 +30,7 @@ resource "aws_codebuild_project" "tf-apply" {
 
   artifacts {
     type = "CODEPIPELINE"
-  }
+  } 
 
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
@@ -42,10 +42,10 @@ resource "aws_codebuild_project" "tf-apply" {
         credential_provider = "SECRETS_MANAGER"
     }
  }
- source {
+  source {
      type   = "CODEPIPELINE"
      buildspec = file("buildspec/apply-buildspec.yml")
- }
+  } 
 }
 
 
@@ -53,7 +53,7 @@ resource "aws_codepipeline" "cicd_pipeline" {
 
     name = "tf-cicd"
     role_arn = aws_iam_role.tf-codepipeline-role.arn
-
+    depends_on = [aws_s3_bucket.codepipeline_artifacts]
     artifact_store {
         type="S3"
         location = aws_s3_bucket.codepipeline_artifacts.id
@@ -71,8 +71,8 @@ resource "aws_codepipeline" "cicd_pipeline" {
             configuration = {
                 FullRepositoryId = "VedantJadhav10/aws-cicd-pipeline"
                 BranchName   = "master"
-                ConnectionArn = var.codestar_connector_credentials
-                OutputArtifactFormat = "CODE_ZIP"
+                ConnectionArn = var.codestar_connector_credentials  //codestar connection makes connection 
+                OutputArtifactFormat = "CODE_ZIP"                   //between github and aws
             }
         }
     }
